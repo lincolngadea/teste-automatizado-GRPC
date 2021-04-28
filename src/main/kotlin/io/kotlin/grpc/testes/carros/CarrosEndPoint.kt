@@ -5,9 +5,9 @@ import io.grpc.stub.StreamObserver
 import io.kotlin.grpc.testes.CarroRequest
 import io.kotlin.grpc.testes.CarroResponse
 import io.kotlin.grpc.testes.CarrosGrpcServiceGrpc
-import org.hibernate.exception.ConstraintViolationException
 import javax.inject.Inject
 import javax.inject.Singleton
+import javax.validation.ConstraintViolationException
 
 @Singleton
 class CarrosEndPoint(@Inject val repository: CarroRepository): CarrosGrpcServiceGrpc.CarrosGrpcServiceImplBase() {
@@ -34,6 +34,9 @@ class CarrosEndPoint(@Inject val repository: CarroRepository): CarrosGrpcService
                 .asRuntimeException())
             return
         }
+
+        responseObserver.onNext(CarroResponse.newBuilder().setId(carro.ID!!).build())
+        responseObserver.onCompleted()
 
     }
 }
